@@ -1,46 +1,72 @@
-from Checking import is_square_safe, are_columns_safe, are_rows_safe, are_squares_safe, checking
-from Sudoku_Generation import generate_board
+from Checking import checking
+from Sudoku_Generation import create_board
 
 
 import pygame
+import time
 
-pygame.font.init()
+pygame.init()
 
 white = (255,255,255)
 Black = (0, 0, 0)
+blue  = (0,91,150)
+green = (154,224,122)
+red  = (251,57,42)
 
-
-window = pygame.display.set_mode((510, 540))
+window = pygame.display.set_mode((510, 600))
 pygame.display.set_caption("SUDOKU")
-number = pygame.font.SysFont('Times new Roman', 40)
+number = pygame.font.SysFont('Arial', 30)
 window.fill(white)
 
 #drawing the board
+class Board():
+    def __init__(self, window):
+        self.grid = create_board()
+        self.window = window 
+        self.selected_cell = None
+    def draw_board(self):
+        def create_cells():
+            board = []
+            for row in range(9):
+                row = []
+                for col in range(9):
+                    cell = pygame.Rect(col * 50 + 6, row * 50 +6, 50, 50)
+                    row.append(cell)
+                board.append(row)
+            return board 
+        def draw_tiles():
+            for i in range(10):
+                if i % 3 ==0:
+                    thickness = 6
+                else:
+                    thickness = 3
+                pygame.draw.line(window, Black, (0, i * 50), (510, i * 50), thickness)
+                pygame.draw.line(window, Black, (i * 50, 0), (i * 50, 510), thickness)
+        def draw_cells(cells):
+                for row in range(9):
+                    for col in range(9):
+                        if self.grid[row][col] != 0:
+                            num = number.render(str(self.grid[row][col]), True, Black)
+                            num_rect = num.get_rect(center=cells[row][col].center)
+                            self.window.blit(num, num_rect)
 
-grid = generate_board()
-
-def board(grid):
-    for i in range(10):
-        if i % 3 == 0:
-            thickness = 4
-        else:
-            thickness = 2
-        pygame.draw.line(window,Black, (0, i*(510/9)), (510, i * (510/9)), thickness)
-        pygame.draw.line(window,Black, (i*(510/9),0), (i * (510/9), 510), thickness)
-
-    for row in range(9):
-        for column in range(9):
-            if grid[row][column] != 0:
-                text = number.render(str(grid[row][column]), True, Black)
-                window.blit(text, (column * 510/9 +19, row * 510/9+ 8))
-run = True
-while run:
-    for event in pygame.event.get():
-        board(grid)
-        if event.type == pygame.QUIT:
-            run = False
-
-    pygame.display.update()
+        cells = create_cells()
+        self.window.fill(white)  
+        draw_tiles()
+        draw_cells(cells)
+        if self.selected_cell:
+                (row, col) = self.selected_cell
+                pygame.draw.rect(self.window, blue, cells[row][col], 5)
+        
+    def select(self, pos):
+        (x, y) = pos
+        col = int(x // 50)  
+        row = int(y // 50)
+        if 0 <= row <= 9 and 0 <= col <= 9:
+            self.selected_cell = (row, col)
+    def adding_number(self):
+        
 
 
-pygame.quit()
+
+        
