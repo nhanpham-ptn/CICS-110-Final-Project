@@ -1,64 +1,46 @@
 # CHECK THE GAME
 # checking rows
-def are_rows_safe(grid):
+
+grid = [[6.9,5,1,2,3,4,7,8],
+        [7,2,4,8,6,5,1,9,3],
+        [3,8,1,7,4,9,6,2,5],
+        [9,3,7,4,1,2,8,5,6],
+        [8,4,2,6,5,7,9,3,1],
+        [5,1,6,3,9,8,7,4,2],
+        [2,7,3,9,8,1,5,6,2],
+        [4,5,8,2,7,6,3,1,9],
+        [1,6,9,5,3,4,2,8,7]
+        ]
+
+def are_rows_safe(grid, num, row):
     result = True
-    for i in range(9):
-        nums = [1,2,3,4,5,6,7,8,9]
-        for j in grid[i]:
-            if j in nums:
-                nums.remove(j)
-                pass
-            else:
+    for j in grid[row]:
+        if num != 0:
+            if num == j:
                 result = False
     return result
 
 #checking columns
-def are_columns_safe(grid):
-    result = True
-    for i in range(9):
-        rows = []
-        nums = [1,2,3,4,5,6,7,8,9]
-
-        for j in range(9):
-            rows.append(grid[j][i])
-        for n in rows:
-            if n in nums:
-                nums.remove(n)
-                pass
-            else:
-                result = False
-    return result
+def are_columns_safe(grid, num, col):
+    for i in range(9):  
+        if num != 0:  
+                if num ==  grid[i][col]:
+                    return False  
+    return True  
 
 
 #checking squares
-def is_square_safe(grid, x, y):
+def is_square_safe(grid, num, col, row):
     result = True
-    nums= [1,2,3,4,5,6,7,8,9]
-
     for i in range(3):
         for j in range(3):
-            if grid[i +3*y][j + 3*x] in nums:
-                nums.remove(grid[i +3*y][j + 3*x])
-            else:
-                result = False
-    return result
-
-
-
-def are_squares_safe(grid):
-    result = True
-    for y in range(3):
-        for x in range(3):
-            result = is_square_safe(grid,x,y)
+            if num !=0:
+                if num == grid[i +3*col][j + 3*row]:
+                    result = False
     return result
 
 
 #checking all
-def checking(grid):
-    if are_columns_safe(grid) == True:
-        if are_rows_safe(grid) == True:
-            if are_squares_safe(grid) == True:
-                return True
-    else:
-        return False
+def checking(grid, num, col, row):
+    return are_rows_safe(grid, num, row) and are_columns_safe(grid, num, col) and is_square_safe(grid, num, col, row)
 
