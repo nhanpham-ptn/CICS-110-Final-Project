@@ -1,8 +1,8 @@
 import random
 
 
-#Generating a board
-def generate_board():
+#create a board
+def create_board():
     board = []
     for i in  range(9):
         spaces = []
@@ -11,7 +11,7 @@ def generate_board():
         board.append(spaces)
 
     for i in range(0, 9, 3):
-        nums = list(range(1, 10))
+        nums = [1,2,3,4,5,6,7,8,9]
         random.shuffle(nums)
         for row in range(3):
             for column in range(3):
@@ -55,13 +55,14 @@ def generate_board():
 
     fill_cells(board, 0, 0)
 
-    for i in range(random.randint(55, 65)):
+    for i in range(random.randint(43, 55)):
         row = random.randint(0, 8) 
         column = random.randint(0, 8)
         board[row][column] = 0
 
     return board
 
-board = generate_board()
+board = create_board()
 for row in board:
     print(row)
+
