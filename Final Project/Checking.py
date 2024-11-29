@@ -32,15 +32,14 @@ def are_columns_safe(grid, num, col):
 #checking squares
 def is_square_safe(grid, num, col, row):
     result = True
-    for i in range(3):
-        for j in range(3):
-            if num !=0:
-                if num == grid[i +3*col][j + 3*row]:
-                    result = False
+    start_col = int(col//3)*3
+    start_row = int(row//3)*3
+    for i in (start_row, start_row + 3):
+        for j in (start_col, start_col + 3):
+            if grid[i][j] == num:
+                result = False
     return result
-
 
 #checking all
 def checking(grid, num, col, row):
     return are_rows_safe(grid, num, row) and are_columns_safe(grid, num, col) and is_square_safe(grid, num, col, row)
-
