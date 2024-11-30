@@ -58,7 +58,7 @@ class Board():
         if self.selected_cell:
                 (row, col) = self.selected_cell
                 pygame.draw.rect(self.window, blue, cells[row][col], 5)
-        
+
     def select(self, pos):
         (x, y) = pos
         col = int(x // (510/9))  
@@ -84,63 +84,43 @@ class Board():
             if checking(self.grid, num , row, col):
                 pygame.draw.rect(self.window, green, cell, 5)
                 self.grid[row][col] = num
-                pygame.display.update()
-                pygame.time.delay(1000)
                 return True
             else:
                 pygame.draw.rect(self.window, red, cell, 5)
                 self.grid[row][col] = 0 
-                pygame.display.update()
-                pygame.time.delay(1000)
                 return False
 
 
     def get_attempt(self):
         return self.attempt
 
-
+#It seems like the problem isn't the board printed but the gameplay
 
 def play_game():
         grid = Board(window)
         selected_cell = None
         run = True
-
+        num = None
 
         while run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    grid.draw_board()
                     if event.button == 1:
                         pos = pygame.mouse.get_pos()
                         if pos[0] < 510 and pos[1] < 510:
                             selected_cell = grid.select(pos)
                             (row, col) = selected_cell
                 elif event.type == pygame.KEYDOWN and selected_cell:
-                    if event.key == pygame.K_1:
-                         grid.correct(1)
-                    elif event.key == pygame.K_2:
-                         grid.correct(2)
-                    elif event.key == pygame.K_3:
-                         grid.correct(3)
-                    elif event.key == pygame.K_4:
-                         grid.correct(4)
-                    elif event.key == pygame.K_5:
-                         grid.correct(5)
-                    elif event.key == pygame.K_6:
-                         grid.correct(6)
-                    elif event.key == pygame.K_7:
-                         grid.correct(7)
-                    elif event.key == pygame.K_8:
-                         grid.correct(8)
-                    elif event.key == pygame.K_9:
-                         grid.correct(9)
-                    elif event.key in [pygame.K_BACKSPACE, pygame.K_DELETE]:  
-                         grid.grid[row][col] = 0
-                    elif event.key == pygame.K_ESCAPE:  
-                         grid.deselect()
-                         selected_cell = None
+                    if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, 
+                                     pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
+                        num =int(event.unicode)
+                        grid.adding_number(num)
+                    elif event.key in [pygame.K_BACKSPACE, pygame.K_DELETE]:
+                        grid.grid[row][col] = 0
+                    elif event.key == pygame.K_RETURN and grid.grid[row][col] != 0:
+                        grid.correct(num)
             grid.draw_board()
             pygame.display.update()
         pygame.quit()
@@ -150,6 +130,15 @@ def play_game():
 play_game()
 
 
+
+        
+
+'''
+self.unavailable_cells = []
+for row in self.grid:
+    for col in self.grid[row]:
+        if self.grid[row][col] !=0:
+'''                    
 
         
 
