@@ -1,22 +1,11 @@
 # CHECK THE GAME
 # checking rows
 
-grid = [[6.9,5,1,2,3,4,7,8],
-        [7,2,4,8,6,5,1,9,3],
-        [3,8,1,7,4,9,6,2,5],
-        [9,3,7,4,1,2,8,5,6],
-        [8,4,2,6,5,7,9,3,1],
-        [5,1,6,3,9,8,7,4,2],
-        [2,7,3,9,8,1,5,6,2],
-        [4,5,8,2,7,6,3,1,9],
-        [1,6,9,5,3,4,2,8,7]
-        ]
-
 def are_rows_safe(grid, num, row):
     result = True
     for j in grid[row]:
         if num != 0:
-            if num == j:
+            if j == num:
                 result = False
     return result
 
@@ -24,22 +13,61 @@ def are_rows_safe(grid, num, row):
 def are_columns_safe(grid, num, col):
     for i in range(9):  
         if num != 0:  
-                if num ==  grid[i][col]:
-                    return False  
+            if grid[i][col] == num  :
+                return False  
     return True  
 
 
 #checking squares
 def is_square_safe(grid, num, col, row):
-    result = True
     start_col = int(col//3)*3
     start_row = int(row//3)*3
-    for i in (start_row, start_row + 3):
-        for j in (start_col, start_col + 3):
-            if grid[i][j] == num:
-                result = False
-    return result
+    if num !=0:
+        for i in range(start_row, start_row + 3):
+            for j in range(start_col, start_col + 3):
+                if grid[i][j] == num:
+                    return False
+    return True
 
 #checking all
 def checking(grid, num, col, row):
     return are_rows_safe(grid, num, row) and are_columns_safe(grid, num, col) and is_square_safe(grid, num, col, row)
+
+
+
+from Sudoku_Generation import create_board
+
+board = create_board()
+
+# def get_location():
+#     row = int(input("Enter a row:"))
+#     col = int(input("Enter a col:"))
+#     return (row,col)
+
+# def filling_num(board):
+#     (row, col) = get_location()
+#     num = int(input("Enter a number"))
+#     if board[row][col] == 0:
+#         if checking(board, num, col, row):
+#             board[row][col] = num
+#             print("Correct")
+#         else:
+#             print("Incorrect")
+#     return None
+
+
+# def result(board):
+#     for row in range(9):
+#         for col in board[row]:
+#             if board[row][col] == 0:
+#                 return False
+#     return True
+
+# run = True
+
+# while run:
+#     for row in board:
+#         print(row)
+#     filling_num(board)
+#     if result(board):
+#         run = False
