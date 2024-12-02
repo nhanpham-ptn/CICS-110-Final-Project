@@ -52,17 +52,7 @@ def create_board():
         board[row][column] = 0
         return False
     
-
     fill_cells(board, 0, 0)
 
-    for i in range(random.randint(43, 55)):
-        row = random.randint(0, 8) 
-        column = random.randint(0, 8)
-        board[row][column] = 0
-
     return board
-
-board = create_board()
-for row in board:
-    print(row)
 
