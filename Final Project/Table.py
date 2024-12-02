@@ -1,4 +1,4 @@
-from Checking import checking
+from Checking import checking, making_game
 from Sudoku_Generation import create_board
 
 
@@ -21,8 +21,9 @@ window.fill(white)
 #drawing the board
 class Board():
     def __init__(self, window):
-        self.grid = create_board()
-        self.window = window 
+        self.board = create_board() 
+        self.grid = making_game([row[:] for row in self.board]) 
+        self.window = window
         self.selected_cell = None
         self.attempt = 3
     def draw_board(self):
@@ -58,7 +59,10 @@ class Board():
         if self.selected_cell:
                 (row, col) = self.selected_cell
                 pygame.draw.rect(self.window, blue, cells[row][col], 5)
-
+        font = pygame.font.SysFont('Arial', 30)
+        attempts = font.render(f"Errors: {self.attempt}", True, Black)
+        attempt_rec = attempts.get_rect(center=(70, 550))
+        window.blit(attempts, attempt_rec)
     def select(self, pos):
         (x, y) = pos
         col = int(x // (510/9))  
@@ -78,67 +82,88 @@ class Board():
         self.selected_cell = None
     
     def correct(self, num):
-        if self.adding_number(num):
-            (row, col) = self.selected_cell
-            cell = pygame.Rect(col * (510/9), row * (510/9), (510/9), (510/9))
-            if checking(self.grid, num , row, col):
+        if not self.selected_cell:
+            return False
+
+        (row, col) = self.selected_cell
+
+        if self.grid[row][col] == 0:
+            if checking(self.board, num, row, col):
+                self.grid[row][col] = num  
+                cell = pygame.Rect(col * (510 / 9), row * (510 / 9), (510 / 9), (510 / 9))
                 pygame.draw.rect(self.window, green, cell, 5)
-                self.grid[row][col] = num
+                pygame.display.update()
+                pygame.time.delay(300)
                 return True
             else:
+                cell = pygame.Rect(col * (510 / 9), row * (510 / 9), (510 / 9), (510 / 9))
                 pygame.draw.rect(self.window, red, cell, 5)
-                self.grid[row][col] = 0 
+                pygame.display.update()
+                pygame.time.delay(300)
                 return False
+        return False
 
-
-    def get_attempt(self):
-        return self.attempt
-
-#It seems like the problem isn't the board printed but the gameplay
-
-def play_game():
-        grid = Board(window)
-        selected_cell = None
-        run = True
-        num = None
-
-        while run:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        pos = pygame.mouse.get_pos()
-                        if pos[0] < 510 and pos[1] < 510:
-                            selected_cell = grid.select(pos)
-                            (row, col) = selected_cell
-                elif event.type == pygame.KEYDOWN and selected_cell:
-                    if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5, 
-                                     pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]:
-                        num =int(event.unicode)
-                        grid.adding_number(num)
-                    elif event.key in [pygame.K_BACKSPACE, pygame.K_DELETE]:
-                        grid.grid[row][col] = 0
-                    elif event.key == pygame.K_RETURN and grid.grid[row][col] != 0:
-                        grid.correct(num)
-            grid.draw_board()
-            pygame.display.update()
-        pygame.quit()
-
+    def end(self):
+        result = False
+        for row in range(9):
+            for col in range(9):
+                if self.grid[row][col] == 0:
+                    result = True
+                
+        return result
     
 
+#To-do list: give an end to the game, timing function, getting attempts
+
+
+def play_game():
+    grid = Board(window)
+    selected_cell = None
+    run = True
+
+    print("Complete Board:")
+    for row in grid.board:
+        print(row)
+    print("\nPlayable Board:")
+    for row in grid.grid:
+        print(row)
+
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    pos = pygame.mouse.get_pos()
+                    if pos[0] < 510 and pos[1] < 510:
+                        selected_cell = grid.select(pos)
+                        (row, col) = selected_cell
+                        if grid.grid[row][col] != 0:
+                            grid.deselect()
+            elif event.type == pygame.KEYDOWN and selected_cell:
+                if event.key in [pygame.K_1, pygame.K_2, pygame.K_3, pygame.K_4, pygame.K_5,
+                                 pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]: 
+                    num = event.key - pygame.K_0 
+                    grid.correct(num)
+                    if not grid.correct(num):
+                        grid.attempt -= 1
+                run = grid.end()
+                if run == False:
+                    font = pygame.font.SysFont('Arial', 100)
+                    result = font.render("You Win", True, green)
+                    result_rec = result.get_rect(center=(255, 255))
+                    window.blit(result, result_rec)
+                    pygame.display.update()
+                    pygame.time.delay(1500) 
+
+
+        grid.draw_board()
+        pygame.display.update()
+
+
+    pygame.quit()
 play_game()
 
-
-
-        
-
-'''
-self.unavailable_cells = []
-for row in self.grid:
-    for col in self.grid[row]:
-        if self.grid[row][col] !=0:
-'''                    
 
         
 
