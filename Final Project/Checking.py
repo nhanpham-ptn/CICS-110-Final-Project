@@ -1,4 +1,33 @@
 # CHECK THE GAME
+
+import random
+def checking(board, num, row, col):
+    if num !=0:
+        if num == board[row][col]:
+            return True
+    return False  
+
+
+def making_game(board):
+        for i in range(random.randint(43, 55)):
+            row = random.randint(0, 8) 
+            column = random.randint(0, 8)
+            board[row][column] = 0
+        return board
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 # checking rows
 
 def are_rows_safe(grid, num, row):
@@ -30,44 +59,49 @@ def is_square_safe(grid, num, col, row):
     return True
 
 #checking all
-def checking(grid, num, col, row):
+def checking(grid, num, row, col):
     return are_rows_safe(grid, num, row) and are_columns_safe(grid, num, col) and is_square_safe(grid, num, col, row)
 
+board = [[4, 6, 1, 3, 2, 5, 7, 8, 9],
+         [0, 0, 0, 0, 4, 9, 0, 3, 0],
+         [9, 0, 0, 0, 8, 0, 2, 4, 0],
+         [2, 8, 0, 0, 9, 0, 4, 0, 7],
+         [1, 7, 0, 0, 0, 0, 8, 2, 5],
+         [0, 0, 0, 2, 7, 0, 9, 1, 3],
+         [0, 0, 0, 0, 5, 0, 3, 9, 0],
+         [8, 0, 0, 7, 0, 3, 6, 5, 4],
+         [0, 0, 4, 0, 0, 2, 1, 7, 0]]
+
+def get_location():
+     row = int(input("Enter a row:"))
+     col = int(input("Enter a col:"))
+     return (row,col)
+
+def filling_num(board):
+        (row, col) = get_location()
+        num = int(input("Enter a number"))
+        if board[row][col] == 0:
+         if checking(board, num, col, row):
+             board[row][col] = num
+             print("Correct")
+         else:
+             print("Incorrect")
+         return None
 
 
-from Sudoku_Generation import create_board
+def result(board):
+     for row in range(9):
+         for col in range(9):
+             if board[row][col] == 0:
+                 return False
+     return True
 
-board = create_board()
+run = True
 
-# def get_location():
-#     row = int(input("Enter a row:"))
-#     col = int(input("Enter a col:"))
-#     return (row,col)
-
-# def filling_num(board):
-#     (row, col) = get_location()
-#     num = int(input("Enter a number"))
-#     if board[row][col] == 0:
-#         if checking(board, num, col, row):
-#             board[row][col] = num
-#             print("Correct")
-#         else:
-#             print("Incorrect")
-#     return None
-
-
-# def result(board):
-#     for row in range(9):
-#         for col in board[row]:
-#             if board[row][col] == 0:
-#                 return False
-#     return True
-
-# run = True
-
-# while run:
-#     for row in board:
-#         print(row)
-#     filling_num(board)
-#     if result(board):
-#         run = False
+while run:
+     for row in board:
+         print(row)
+     filling_num(board)
+     if result(board):
+         run = False
+'''
