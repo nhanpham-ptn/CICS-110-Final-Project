@@ -60,8 +60,9 @@ class Board():
                 (row, col) = self.selected_cell
                 pygame.draw.rect(self.window, blue, cells[row][col], 5)
         font = pygame.font.SysFont('Arial', 30)
-        attempts = font.render(f"Errors: {self.attempt}", True, Black)
-        attempt_rec = attempts.get_rect(center=(70, 550))
+        attempts = font.render(f" Strikes left: {self.attempt} ", True, Black)
+        attempt_rec = attempts.get_rect(center=(80, 550))
+        pygame.draw.rect(self.window, Black, attempt_rec ,width=2, border_radius=0)
         window.blit(attempts, attempt_rec)
     def select(self, pos):
         (x, y) = pos
@@ -98,6 +99,7 @@ class Board():
             else:
                 cell = pygame.Rect(col * (510 / 9), row * (510 / 9), (510 / 9), (510 / 9))
                 pygame.draw.rect(self.window, red, cell, 5)
+                self.attempt -= 1
                 pygame.display.update()
                 pygame.time.delay(300)
                 return False
@@ -120,11 +122,12 @@ def play_game():
     grid = Board(window)
     selected_cell = None
     run = True
+    font = pygame.font.SysFont('Arial', 100)
 
-    print("Complete Board:")
+    print("cmplete board:")
     for row in grid.board:
         print(row)
-    print("\nPlayable Board:")
+    print("\nplayable board:")
     for row in grid.grid:
         print(row)
 
@@ -145,16 +148,22 @@ def play_game():
                                  pygame.K_6, pygame.K_7, pygame.K_8, pygame.K_9]: 
                     num = event.key - pygame.K_0 
                     grid.correct(num)
-                    if not grid.correct(num):
-                        grid.attempt -= 1
+                    if grid.attempt == 0:
+                        result = font.render("You Lose", True, red)
+                        result_rec = result.get_rect(center=(255, 255))
+                        window.blit(result, result_rec)
+                        pygame.display.update()
+                        pygame.time.delay(1500)
+                        play_game()
+
                 run = grid.end()
                 if run == False:
-                    font = pygame.font.SysFont('Arial', 100)
                     result = font.render("You Win", True, green)
                     result_rec = result.get_rect(center=(255, 255))
                     window.blit(result, result_rec)
                     pygame.display.update()
-                    pygame.time.delay(1500) 
+                    pygame.time.delay(1500)
+                    play_game()
 
 
         grid.draw_board()
@@ -164,6 +173,11 @@ def play_game():
     pygame.quit()
 play_game()
 
+
+        
+
+
+        
 
         
 
