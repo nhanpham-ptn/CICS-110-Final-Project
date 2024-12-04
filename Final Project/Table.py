@@ -7,6 +7,7 @@ import time
 
 pygame.init()
 
+# Get some colors for the GUI
 white = (255,255,255)
 Black = (0, 0, 0)
 blue  = (0,91,150)
@@ -18,9 +19,10 @@ pygame.display.set_caption("SUDOKU")
 number = pygame.font.SysFont('Arial', 30)
 window.fill(white)
 
-#drawing the board
+# defining the board object
 class Board():
     def __init__(self, window):
+        # give the Board object some attributes: the gird, the window, the cell selected by the player, attempts left to try
         self.board = create_board() 
         self.grid = making_game([row[:] for row in self.board]) 
         self.window = window
@@ -99,6 +101,7 @@ class Board():
             else:
                 cell = pygame.Rect(col * (510 / 9), row * (510 / 9), (510 / 9), (510 / 9))
                 pygame.draw.rect(self.window, red, cell, 5)
+                self.grid[row][col] = 0
                 self.attempt -= 1
                 pygame.display.update()
                 pygame.time.delay(300)
@@ -117,7 +120,7 @@ class Board():
 
 #To-do list: give an end to the game, timing function, getting attempts
 
-
+#Don't turn on UniKey while playing or else, it won't work
 def play_game():
     grid = Board(window)
     selected_cell = None
@@ -164,6 +167,8 @@ def play_game():
                     pygame.display.update()
                     pygame.time.delay(1500)
                     play_game()
+                
+                
 
 
         grid.draw_board()
@@ -172,6 +177,9 @@ def play_game():
 
     pygame.quit()
 play_game()
+
+
+        
 
 
         
